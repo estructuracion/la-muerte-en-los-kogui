@@ -5,50 +5,52 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>La muerte en los Kogui | Simulador interactivo</title>
 <style>
-:root{--bg:#101827;--panel:#172337;--panel2:#1d2c43;--line:#34465f;--text:#eef4fb;--muted:#a9b8ca;--accent:#75c9c2;--accent2:#b5e5df;--warn:#f5c77e}
+:root{--bg:#f3f0e8;--panel:#fffdf8;--panel2:#f7f5ee;--line:#ded8c9;--text:#30382f;--muted:#74786b;--accent:#647653;--accent2:#e5eadb;--warn:#ead9b7}
 *{box-sizing:border-box}
-body{margin:0;background:linear-gradient(145deg,#0d1726,#14243a 60%,#102b35);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh;padding:32px 16px}
+body{margin:0;background:linear-gradient(180deg,#eeece3 0%,#f6f4ee 48%,#e9e7dc 100%);color:var(--text);font-family:Arial,Helvetica,sans-serif;min-height:100vh;padding:32px 16px}
 .container{max-width:980px;margin:0 auto}
 header{text-align:center;margin:12px 0 30px}
-.eyebrow{color:var(--accent);font-size:.78rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
-h1{font-size:clamp(1.8rem,4vw,2.7rem);margin:10px 0}
+.eyebrow{color:#75815f;font-size:.76rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+h1{font-size:clamp(1.8rem,4vw,2.7rem);margin:10px 0;color:#354332;font-weight:700}
 .subtitle{color:var(--muted);max-width:700px;margin:0 auto;line-height:1.6}
-.card{background:rgba(23,35,55,.94);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 18px 50px #0003;margin-bottom:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;box-shadow:0 5px 18px rgba(64,61,45,.07);margin-bottom:18px}
 .topline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-h2{font-size:1.2rem;margin:0 0 8px}
+h2{font-size:1.2rem;margin:0 0 8px;color:#3c4937}
 .progress-label{color:var(--muted);font-size:.9rem}
-.progress{height:8px;background:#0e1929;border-radius:20px;overflow:hidden;margin:15px 0 24px}
-.progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--accent),#9be0bd);transition:width .25s}
+.progress{height:8px;background:#e8e5db;border-radius:20px;overflow:hidden;margin:15px 0 24px}
+.progress>div{height:100%;width:0;background:#788866;transition:width .25s}
 .steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-.field{background:var(--panel2);border:1px solid var(--line);border-radius:13px;padding:16px}
+.field{background:var(--panel2);border:1px solid #e3dfd3;border-radius:10px;padding:16px}
 .field.hidden{display:none}
-.field label{display:block;font-weight:700;margin-bottom:5px}
-.dimension{display:block;color:var(--accent);font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:9px}
-select{width:100%;padding:12px 13px;border-radius:9px;border:1px solid #50637b;background:#101c2c;color:var(--text);font-size:1rem;outline:none}
-select:focus{border-color:var(--accent);box-shadow:0 0 0 3px #75c9c222}
-.help{font-size:.83rem;color:var(--muted);margin:9px 0 0;line-height:1.45}
+.field label{display:block;font-weight:700;margin-bottom:5px;color:#3c4338}
+.dimension{display:block;color:#778361;font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;margin-bottom:9px;font-weight:700}
+select{width:100%;padding:12px 13px;border-radius:8px;border:1px solid #d2cdbf;background:#fffefa;color:#343a31;font-size:1rem;outline:none}
+select:focus{border-color:#879574;box-shadow:0 0 0 3px rgba(120,136,102,.15)}
+.help{font-size:.83rem;color:#7a7d72;margin:9px 0 0;line-height:1.45}
 .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
-button{border:0;border-radius:10px;padding:12px 18px;font-weight:750;font-size:.95rem;cursor:pointer}
-.primary{background:var(--accent);color:#10202b}
-.secondary{background:#293b53;color:var(--text);border:1px solid #52647a}
-button:disabled{opacity:.4;cursor:not-allowed}
-.result{display:none;margin-top:20px;border:1px solid #4e8f89;background:linear-gradient(140deg,#183b42,#1b3041);border-radius:15px;padding:22px}
+button{border:0;border-radius:8px;padding:12px 18px;font-weight:700;font-size:.95rem;cursor:pointer}
+.primary{background:#687a56;color:white}
+.primary:hover{background:#566747}
+.secondary{background:#f0eee6;color:#505747;border:1px solid #d8d4c8}
+.secondary:hover{background:#e8e5da}
+button:disabled{opacity:.45;cursor:not-allowed}
+.result{display:none;margin-top:20px;border:1px solid #b9c3aa;background:#f0f3e9;border-radius:11px;padding:22px}
 .result.show{display:block}
-.result-tag{display:inline-block;color:#112a2b;background:var(--accent2);font-size:.75rem;font-weight:800;padding:5px 9px;border-radius:20px;margin-bottom:12px}
-.result h3{font-size:1.45rem;margin:0 0 12px}
-.result p{line-height:1.7;margin:0;color:#e5f0f3}
-.result.unmatched{border-color:#876b3f;background:#352e23}
-.result.unmatched .result-tag{background:var(--warn);color:#352715}
+.result-tag{display:inline-block;color:#40513a;background:#dce5d1;font-size:.73rem;font-weight:800;padding:5px 9px;border-radius:5px;margin-bottom:12px}
+.result h3{font-size:1.4rem;margin:0 0 12px;color:#3d4a36}
+.result p{line-height:1.7;margin:0;color:#454c40}
+.result.unmatched{border-color:#d7c49f;background:#f7f1e5}
+.result.unmatched .result-tag{background:#ead9b7;color:#695633}
 .selection-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:16px}
-.summary-item{background:#ffffff0c;border:1px solid #ffffff16;padding:10px;border-radius:9px;font-size:.88rem}
-.summary-item b{display:block;color:var(--accent2);font-size:.75rem;margin-bottom:4px}
+.summary-item{background:rgba(255,255,255,.65);border:1px solid #e0ddcf;padding:10px;border-radius:7px;font-size:.88rem;color:#444a3f}
+.summary-item b{display:block;color:#71805e;font-size:.75rem;margin-bottom:4px}
 .note{font-size:.85rem;color:var(--muted);line-height:1.55}
 details{margin-top:18px}
-summary{cursor:pointer;color:var(--accent2);font-weight:700}
+summary{cursor:pointer;color:#647653;font-weight:700}
 .case-list{margin-top:12px;display:grid;gap:10px}
-.case{padding:13px;border:1px solid var(--line);border-radius:10px;background:#101c2b}
-.case strong{color:var(--accent2)}
-footer{text-align:center;color:var(--muted);font-size:.8rem;padding:10px}
+.case{padding:13px;border:1px solid #e0ddcf;border-radius:8px;background:#faf9f4}
+.case strong{color:#596b48}
+footer{text-align:center;color:#858477;font-size:.8rem;padding:10px}
 @media(max-width:650px){body{padding:18px 12px}.card{padding:17px}.steps,.selection-summary{grid-template-columns:1fr}}
 </style>
 </head>
