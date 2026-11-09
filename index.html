@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La muerte en los Kogui | Simulador interactivo</title>
+<style>
+:root{--bg:#101827;--panel:#172337;--panel2:#1d2c43;--line:#34465f;--text:#eef4fb;--muted:#a9b8ca;--accent:#75c9c2;--accent2:#b5e5df;--warn:#f5c77e}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(145deg,#0d1726,#14243a 60%,#102b35);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh;padding:32px 16px}
+.container{max-width:980px;margin:0 auto}
+header{text-align:center;margin:12px 0 30px}
+.eyebrow{color:var(--accent);font-size:.78rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+h1{font-size:clamp(1.8rem,4vw,2.7rem);margin:10px 0}
+.subtitle{color:var(--muted);max-width:700px;margin:0 auto;line-height:1.6}
+.card{background:rgba(23,35,55,.94);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 18px 50px #0003;margin-bottom:18px}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+h2{font-size:1.2rem;margin:0 0 8px}
+.progress-label{color:var(--muted);font-size:.9rem}
+.progress{height:8px;background:#0e1929;border-radius:20px;overflow:hidden;margin:15px 0 24px}
+.progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--accent),#9be0bd);transition:width .25s}
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.field{background:var(--panel2);border:1px solid var(--line);border-radius:13px;padding:16px}
+.field.hidden{display:none}
+.field label{display:block;font-weight:700;margin-bottom:5px}
+.dimension{display:block;color:var(--accent);font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:9px}
+select{width:100%;padding:12px 13px;border-radius:9px;border:1px solid #50637b;background:#101c2c;color:var(--text);font-size:1rem;outline:none}
+select:focus{border-color:var(--accent);box-shadow:0 0 0 3px #75c9c222}
+.help{font-size:.83rem;color:var(--muted);margin:9px 0 0;line-height:1.45}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+button{border:0;border-radius:10px;padding:12px 18px;font-weight:750;font-size:.95rem;cursor:pointer}
+.primary{background:var(--accent);color:#10202b}
+.secondary{background:#293b53;color:var(--text);border:1px solid #52647a}
+button:disabled{opacity:.4;cursor:not-allowed}
+.result{display:none;margin-top:20px;border:1px solid #4e8f89;background:linear-gradient(140deg,#183b42,#1b3041);border-radius:15px;padding:22px}
+.result.show{display:block}
+.result-tag{display:inline-block;color:#112a2b;background:var(--accent2);font-size:.75rem;font-weight:800;padding:5px 9px;border-radius:20px;margin-bottom:12px}
+.result h3{font-size:1.45rem;margin:0 0 12px}
+.result p{line-height:1.7;margin:0;color:#e5f0f3}
+.result.unmatched{border-color:#876b3f;background:#352e23}
+.result.unmatched .result-tag{background:var(--warn);color:#352715}
+.selection-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:16px}
+.summary-item{background:#ffffff0c;border:1px solid #ffffff16;padding:10px;border-radius:9px;font-size:.88rem}
+.summary-item b{display:block;color:var(--accent2);font-size:.75rem;margin-bottom:4px}
+.note{font-size:.85rem;color:var(--muted);line-height:1.55}
+details{margin-top:18px}
+summary{cursor:pointer;color:var(--accent2);font-weight:700}
+.case-list{margin-top:12px;display:grid;gap:10px}
+.case{padding:13px;border:1px solid var(--line);border-radius:10px;background:#101c2b}
+.case strong{color:var(--accent2)}
+footer{text-align:center;color:var(--muted);font-size:.8rem;padding:10px}
+@media(max-width:650px){body{padding:18px 12px}.card{padding:17px}.steps,.selection-summary{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <div class="eyebrow">Herramienta interactiva</div>
+  <h1>La muerte en los Kogui</h1>
+  <p class="subtitle">Selecciona un estado para cada una de las seis variables y descubre qué caso de la tabla coincide con tu combinación.</p>
+</header>
+<section class="card">
+  <div class="topline">
+    <div><h2>Construye tu combinación</h2><div class="progress-label" id="progressText">0 de 6 variables seleccionadas</div></div>
+    <div class="progress-label">Paso a paso</div>
+  </div>
+  <div class="progress"><div id="progressBar"></div></div>
+  <div class="steps" id="fields">
+    <div class="field" data-index="0"><span class="dimension">Dimensión biológica</span><label for="v0">1. Edad al morir</label><select id="v0"><option value="">Selecciona un estado</option><option>Joven</option><option>Adulto</option><option>Edad avanzada</option></select><p class="help">Etapa de vida en la que ocurre la muerte.</p></div>
+    <div class="field hidden" data-index="1"><span class="dimension">Dimensión psicológica</span><label for="v1">2. Atribución de la muerte</label><select id="v1"><option value="">Selecciona un estado</option><option>Conducta individual</option><option>Causa indeterminada</option><option>Ciclo natural de la vida</option></select><p class="help">Causa a la que se atribuye la muerte.</p></div>
+    <div class="field hidden" data-index="2"><span class="dimension">Dimensión cultural</span><label for="v2">3. Creencias sobre la existencia después de la muerte</label><select id="v2"><option value="">Selecciona un estado</option><option>Retorno al origen</option><option>Continuidad espiritual</option><option>Existencia según la forma de vida</option></select><p class="help">Creencias comunitarias sobre la existencia posterior.</p></div>
+    <div class="field hidden" data-index="3"><span class="dimension">Dimensión social</span><label for="v3">4. Respuesta social</label><select id="v3"><option value="">Selecciona un estado</option><option>Rechazo</option><option>Indiferencia</option><option>Aceptación</option></select><p class="help">Reacción de la comunidad ante la muerte.</p></div>
+    <div class="field hidden" data-index="4"><span class="dimension">Dimensión social</span><label for="v4">5. Vínculo familiar</label><select id="v4"><option value="">Selecciona un estado</option><option>Conservado</option><option>Debilitado</option><option>Tenso</option></select><p class="help">Estado de las relaciones familiares y comunitarias.</p></div>
+    <div class="field hidden" data-index="5"><span class="dimension">Dimensión cultural</span><label for="v5">6. Prácticas de despedida</label><select id="v5"><option value="">Selecciona un estado</option><option>Rituales exorbitantes</option><option>Sin grandes ceremonias</option><option>Ceremonias familiares</option></select><p class="help">Forma en que se despide a la persona fallecida.</p></div>
+  </div>
+  <div class="actions"><button class="primary" id="analyze" disabled>Analizar combinación</button><button class="secondary" id="reset" type="button">Reiniciar</button></div>
+  <div class="result" id="result" aria-live="polite"></div>
+</section>
+<section class="card">
+  <h2>¿Cómo se obtiene el resultado?</h2>
+  <p class="note">El simulador compara los seis estados seleccionados con los casos registrados en la tabla que compartiste. Si encuentra una coincidencia exacta, muestra el nombre del caso y su justificación original. Si la combinación no está en la tabla, construye una justificación interpretativa nueva a partir del significado de cada estado y de las relaciones entre las variables.</p>
+  <details><summary>Consultar los casos incluidos en esta versión</summary><div class="case-list" id="caseList"></div><p class="note">La fila del caso 5 no estaba incluida en las imágenes recibidas, por eso no se agregó. Las combinaciones que no coinciden con los casos registrados reciben una justificación interpretativa generada automáticamente.</p></details>
+</section>
+<footer>La muerte en los Kogui · Simulador académico interactivo</footer>
+</div>
+<script>
+const cases = [
+ {number:1,name:"Rebeldía juvenil",values:["Joven","Conducta individual","Continuidad espiritual","Rechazo","Debilitado","Sin grandes ceremonias"],justification:"La muerte joven se explica por la conducta, lo que genera rechazo y distanciamiento que debilitan el vínculo con la familia. Como el ciclo de vida se considera interrumpido, la despedida casi no tiene ceremonias, aunque se mantiene la creencia en una existencia posterior que continúe el ciclo en la vejez."},
+ {number:2,name:"Juventud truncada",values:["Joven","Ciclo natural de la vida","Continuidad espiritual","Aceptación","Conservado","Sin grandes ceremonias"],justification:"En este caso, la muerte de un joven se atribuye al ciclo de la vida y no a su conducta, por lo que no hay rechazo y el vínculo se conserva; la despedida seguiría siendo sencilla porque el ciclo sigue interrumpido."},
+ {number:3,name:"Rebeldía perdonada",values:["Joven","Conducta individual","Continuidad espiritual","Aceptación","Conservado","Sin grandes ceremonias"],justification:"La comunidad acepta la muerte aunque la atribuye a la conducta, por lo que el vínculo familiar se conserva; la despedida sigue siendo sencilla por la interrupción del ciclo."},
+ {number:4,name:"Ciclo a medias",values:["Adulto","Causa indeterminada","Existencia según la forma de vida","Indiferencia","Tenso","Ceremonias familiares"],justification:"La muerte de un adulto no se atribuye con claridad ni a la conducta ni al ciclo natural, por lo que la comunidad responde con indiferencia y el vínculo familiar queda tenso; la despedida se limita a ceremonias familiares."},
+ {number:6,name:"Adultez aceptada",values:["Adulto","Ciclo natural de la vida","Continuidad espiritual","Aceptación","Conservado","Ceremonias familiares"],justification:"La muerte de un adulto se atribuye al ciclo de la vida, la comunidad la acepta y el vínculo se conserva, con una despedida de tamaño familiar."},
+ {number:7,name:"Ciclo natural",values:["Edad avanzada","Ciclo natural de la vida","Retorno al origen","Aceptación","Conservado","Rituales exorbitantes"],justification:"La muerte en la vejez se vive como parte del ciclo y como regreso al cuerpo de la madre, por lo que la comunidad la acepta y la despide con rituales de mayor magnitud."},
+ {number:8,name:"Vejez completada",values:["Edad avanzada","Ciclo natural de la vida","Continuidad espiritual","Aceptación","Conservado","Rituales exorbitantes"],justification:"La muerte en edad avanzada se entiende como cumplimiento de las etapas de la vida y continuidad de la existencia espiritual, lo que justifica una despedida colectiva más amplia."},
+ {number:9,name:"Vejez reprochada",values:["Edad avanzada","Conducta individual","Continuidad espiritual","Rechazo","Debilitado","Rituales exorbitantes"],justification:"La muerte de un anciano se atribuye a su conducta, por ende, hay rechazo y el vínculo se debilita, pero los rituales se mantienen dado que el ciclo de vida se completó."}
+];
+const selects=Array.from({length:6},(_,i)=>document.getElementById("v"+i));
+const fields=Array.from(document.querySelectorAll(".field"));
+const progressText=document.getElementById("progressText"),progressBar=document.getElementById("progressBar"),analyze=document.getElementById("analyze"),result=document.getElementById("result");
+function update(){const count=selects.filter(s=>s.value!=="").length;progressText.textContent=`${count} de 6 variables seleccionadas`;progressBar.style.width=(count/6*100)+"%";analyze.disabled=count!==6;fields.forEach((field,i)=>field.classList.toggle("hidden",!(i===0||selects.slice(0,i).every(s=>s.value!==""))));if(count!==6)result.className="result";}
+selects.forEach(s=>s.addEventListener("change",()=>{result.className="result";update();}));
+analyze.addEventListener("click",()=>{
+ const chosen=selects.map(s=>s.value),match=cases.find(c=>c.values.every((v,i)=>v===chosen[i]));
+ const summary=`<div class="selection-summary">${["Edad al morir","Atribución de la muerte","Creencias","Respuesta social","Vínculo familiar","Prácticas de despedida"].map((label,i)=>`<div class="summary-item"><b>${label}</b>${escapeHTML(chosen[i])}</div>`).join("")}</div>`;
+ if(match){result.className="result show";result.innerHTML=`<span class="result-tag">RESULTADO</span><h3>${escapeHTML(match.name)}</h3><p>${escapeHTML(match.justification)}</p>${summary}`;}
+ else {
+ const interpretation={
+ age:{"Joven":"Al tratarse de una persona joven, la muerte puede interpretarse como una interrupción temprana del ciclo de vida.","Adulto":"Al ocurrir durante la adultez, la muerte se ubica en una etapa intermedia del ciclo vital.","Edad avanzada":"Al ocurrir en edad avanzada, la muerte puede entenderse como el cierre de un ciclo de vida que ha recorrido sus distintas etapas."},
+ cause:{"Conducta individual":"La atribución a la conducta individual introduce una valoración sobre las decisiones o acciones de la persona y puede influir en la manera en que la comunidad interpreta su fallecimiento.","Causa indeterminada":"La causa indeterminada deja abierta la explicación de la muerte, por lo que no permite asignar con claridad responsabilidad individual ni relacionarla directamente con el ciclo natural.","Ciclo natural de la vida":"La atribución al ciclo natural presenta la muerte como parte del proceso de la vida y no como consecuencia directa de la conducta individual."},
+ belief:{"Retorno al origen":"La creencia en el retorno al origen interpreta la muerte como un regreso a un principio o lugar de procedencia.","Continuidad espiritual":"La creencia en la continuidad espiritual plantea que la existencia de la persona continúa de alguna manera después de la muerte.","Existencia según la forma de vida":"La idea de una existencia posterior condicionada por la forma de vida relaciona el destino después de la muerte con la trayectoria y las acciones de la persona."},
+ social:{"Rechazo":"La respuesta de rechazo expresa una valoración negativa de la comunidad y puede generar distancia frente a la persona fallecida y su entorno.","Indiferencia":"La indiferencia refleja una reacción comunitaria limitada, sin una aceptación o un rechazo claramente manifestados.","Aceptación":"La aceptación muestra una disposición comunitaria a reconocer la muerte y acompañar el proceso de despedida."},
+ family:{"Conservado":"El vínculo familiar conservado indica que las relaciones cercanas mantienen su cohesión y pueden funcionar como apoyo durante el duelo.","Debilitado":"El vínculo familiar debilitado sugiere distanciamiento o pérdida de cohesión entre los familiares, lo que puede hacer menos cercano el acompañamiento.","Tenso":"El vínculo familiar tenso refleja la presencia de conflictos o desacuerdos que pueden dificultar el proceso compartido de despedida."},
+ farewell:{"Rituales exorbitantes":"Los rituales de gran magnitud expresan una despedida colectiva y ceremonial, en la que la comunidad puede dar especial importancia al tránsito de la persona.","Sin grandes ceremonias":"La ausencia de grandes ceremonias representa una despedida sencilla, con pocas manifestaciones rituales.","Ceremonias familiares":"Las ceremonias familiares concentran la despedida en el círculo cercano y destacan la participación de los parientes."}};
+ const [age,cause,belief,social,family,farewell]=chosen;
+ let generated=[interpretation.age[age],interpretation.cause[cause],interpretation.belief[belief],interpretation.social[social],interpretation.family[family],interpretation.farewell[farewell]].join(" ");
+ let relation="";
+ if(cause==="Conducta individual"&&social==="Aceptación")relation="En esta combinación, aunque la muerte se relaciona con la conducta individual, la comunidad responde con aceptación; esto muestra que la atribución de la causa no determina por sí sola la reacción social.";
+ else if(cause==="Conducta individual"&&social==="Rechazo")relation="La relación entre la atribución a la conducta y el rechazo comunitario puede reforzar el distanciamiento social, especialmente si el vínculo familiar también está debilitado o tenso.";
+ else if(cause==="Ciclo natural de la vida"&&social==="Aceptación")relation="La atribución al ciclo natural es coherente con la aceptación comunitaria, pues ambas interpretaciones presentan la muerte como parte del proceso vital.";
+ else if(social==="Rechazo"&&family==="Conservado")relation="Aunque la comunidad manifiesta rechazo, el vínculo familiar se conserva; esto permite distinguir la reacción social general de las relaciones dentro de la familia.";
+ else if(social==="Aceptación"&&family!=="Conservado")relation="Aunque existe aceptación comunitaria, el vínculo familiar no se encuentra plenamente conservado, por lo que el acompañamiento de la comunidad y la dinámica interna de la familia pueden ser diferentes.";
+ else if(belief==="Retorno al origen"&&age==="Edad avanzada")relation="La combinación entre edad avanzada y retorno al origen refuerza una lectura de la muerte como cierre y transición dentro del ciclo vital.";
+ else if(belief==="Continuidad espiritual")relation="La creencia en la continuidad espiritual aporta un sentido de permanencia que puede dar significado a la despedida, independientemente de su magnitud.";
+ generated+=" "+relation+" En conjunto, estos elementos configuran una interpretación particular de la muerte: la etapa de vida y la atribución de su causa se relacionan con la respuesta social y los vínculos familiares, mientras que las creencias culturales se expresan en la forma de despedida elegida.";
+ result.className="result show unmatched";result.innerHTML=`<span class="result-tag">RESULTADO</span><h3>Resultado</h3><p>${escapeHTML(generated)}</p><p class="note" style="margin-top:12px">Esta explicación es una interpretación construida a partir de los seis estados seleccionados y de los criterios presentes en los casos de referencia. No corresponde a una fila literal de la tabla.</p>${summary}`;
+ }
+ result.scrollIntoView({behavior:"smooth",block:"nearest"});
+});
+document.getElementById("reset").addEventListener("click",()=>{selects.forEach(s=>s.value="");result.className="result";result.innerHTML="";update();fields[0].scrollIntoView({behavior:"smooth",block:"nearest"});});
+function escapeHTML(value){return String(value).replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));}
+document.getElementById("caseList").innerHTML=cases.map(c=>`<div class="case"><strong>Caso ${c.number}: ${escapeHTML(c.name)}</strong><div class="note">${c.values.map(escapeHTML).join(" · ")}</div></div>`).join("");
+update();
+</script>
+</body>
+</html>
