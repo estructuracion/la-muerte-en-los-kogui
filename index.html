@@ -123,7 +123,6 @@ analyze.addEventListener("click",()=>{
 });
 document.getElementById("reset").addEventListener("click",()=>{selects.forEach(s=>s.value="");result.className="result";result.innerHTML="";update();fields[0].scrollIntoView({behavior:"smooth",block:"nearest"});});
 function escapeHTML(value){return String(value).replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));}
-document.getElementById("caseList").innerHTML=cases.map(c=>`<div class="case"><strong>Caso ${c.number}: ${escapeHTML(c.name)}</strong><div class="note">${c.values.map(escapeHTML).join(" · ")}</div></div>`).join("");
 update();
 </script>
 </body>
